@@ -58,6 +58,7 @@ public class EntradaAmenazas extends BaseEntrada implements EntradaDatos<Mapa> {
 					this.mapa.setAmenaza(x, y, amenaza);
 				}else{
 					logger.error("La línea ingresada no es válida: " + linea);
+					throw new EntradaException("La línea ingresada no es válida: " + linea);
 				}
 			}
 		} catch (FileNotFoundException e) {

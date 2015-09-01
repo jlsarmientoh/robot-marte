@@ -15,6 +15,8 @@ public class EntradaAmenazasTest {
 	
 	private static final String FILE_PATH = "amenazas.txt";
 	
+	private static final String FILE_PATH_FAIL = "amenazas_fail.txt";
+	
 	private EntradaDatos entradaDatos;
 	
 	@Before
@@ -26,6 +28,12 @@ public class EntradaAmenazasTest {
 	@Test
 	public void testProcesarEntrada() throws EntradaException, URISyntaxException {
 		String ruta = getClass().getClassLoader().getResource(FILE_PATH).toURI().getPath();
+		this.entradaDatos.procesarEntrada(ruta);
+	}
+	
+	@Test(expected = EntradaException.class)
+	public void testProcesarEntradaInvalida() throws EntradaException, URISyntaxException {
+		String ruta = getClass().getClassLoader().getResource(FILE_PATH_FAIL).toURI().getPath();
 		this.entradaDatos.procesarEntrada(ruta);
 	}
 
