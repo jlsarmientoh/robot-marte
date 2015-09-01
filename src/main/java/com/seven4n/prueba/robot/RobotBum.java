@@ -14,6 +14,8 @@ public class RobotBum implements Robot {
 	
 	private static final Logger logger = LoggerFactory.getLogger(RobotBum.class);
 	
+	private boolean inicializado;
+	
 	private int actualX;
 	
 	private int actualY;
@@ -35,8 +37,11 @@ public class RobotBum implements Robot {
 	/* (non-Javadoc)
 	 * @see com.seven4n.prueba.robot.Robot#moverse(char)
 	 */
-	@Override
 	public void moverse(char accion) throws RobotException{
+		
+		if(!this.inicializado)
+			throw new RobotException("Ubicación desconocida");
+		
 		switch(accion){
 			case 'I' :{
 				if(this.actualOrientacion == 0){
@@ -56,31 +61,48 @@ public class RobotBum implements Robot {
 			}
 			case 'A' :{
 				char orientacion = this.orientaciones[this.actualOrientacion];
+				int deltaX = this.actualX;
+				int deltaY = this.actualY;
 				
 				switch(orientacion){
 					case 'S' : {
-						this.actualY--;
-						detectarAmenaza(this.actualX, this.actualY);
+						deltaY--;						
 						break;
 					}
 					case 'W' : {
-						this.actualX++;
-						detectarAmenaza(this.actualX, this.actualY);
+						deltaX--;
 						break;
 					}
 					case 'N' : {
-						this.actualY++;
-						detectarAmenaza(this.actualX, this.actualY);
+						deltaY++;
 						break;
 					}
 					case 'E' : {
-						this.actualX--;
-						detectarAmenaza(this.actualX, this.actualY);
+						deltaX++;
 						break;
+					}
+					
+					default:{
+						throw new RobotException("Orientación inválida");
 					}
 				}
 				
+				try {
+					if(this.mapa.coordenadaValida(deltaX, deltaY)){
+						detectarAmenaza(deltaX, deltaY);
+						this.actualX = deltaX;
+						this.actualY = deltaY;
+					}else{
+						logger.error(String.format("No se puede desplazar a (%d,%d), fuera del mapa"), deltaX, deltaY);
+					}
+				} catch (MapaException e) {
+					logger.error(String.format("No se puede desplazar a (%d,%d)"), deltaX, deltaY);
+				}
+				
 				break;
+			}
+			default:{
+				throw new RobotException("Acción inválida");
 			}
 		}
 	}
@@ -88,7 +110,6 @@ public class RobotBum implements Robot {
 	/* (non-Javadoc)
 	 * @see com.seven4n.prueba.robot.Robot#setPosicionInicial(int, int, char)
 	 */
-	@Override
 	public void setPosicionInicial(int x, int y, char orientacion) throws RobotException{
 		try{
 			
@@ -98,6 +119,8 @@ public class RobotBum implements Robot {
 			this.actualX = x;
 			this.actualY = y;
 			this.actualOrientacion = getOrientacionIndice(orientacion);
+			this.detectarAmenaza(x, y);
+			this.inicializado = true;
 		}catch(MapaException ex){
 			logger.error("No se puede establecer la posición inicial: " + ex.getMessage());
 			throw new RobotException("No se puede establecer la posición inicial: " + ex.getMessage(), ex);
@@ -107,8 +130,10 @@ public class RobotBum implements Robot {
 	/* (non-Javadoc)
 	 * @see com.seven4n.prueba.robot.Robot#getPosicion()
 	 */
-	@Override
-	public String getPosicion(){
+	public String getPosicion() throws RobotException{
+		if(!this.inicializado)
+			throw new RobotException("No se donde estoy.  Ubicación desconocida");
+		
 		return String.format("%d %d %s", 
 				this.actualX, 
 				this.actualY, 
@@ -132,15 +157,28 @@ public class RobotBum implements Robot {
 		
 	}
 	
-	private int getOrientacionIndice(char orientacion){
-		int indice = 0;
+	private int getOrientacionIndice(char orientacion) throws RobotException{
+		int indice = -1;
 		for(int i = 0; i < this.orientaciones.length; i++){
 			if(this.orientaciones[i] == orientacion){
 				indice = i;
 				break;
 			}
 		}
+		
+		if(indice == -1)
+			throw new RobotException("Orientación no válida");
+		
 		return indice;
 	}
 
+	public String getAmenazas(){
+		StringBuilder sb = new StringBuilder();
+		
+		for(String amenaza : this.amenazas){
+			sb.append(amenaza);
+		}
+		
+		return sb.toString();
+	}
 }

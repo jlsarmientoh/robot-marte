@@ -14,14 +14,13 @@ public class MapaMarte implements Mapa {
 	private boolean inicializado;
 	
 	public MapaMarte(int maxY, int maxX){
-		this.terreno = new char[maxY][maxX];
+		this.terreno = new char[maxY + 1][maxX + 1];
 		this.inicializado = true;
 	}
 	
 	/* (non-Javadoc)
 	 * @see com.seven4n.prueba.mapa.Mapa#setAmenaza(int, int, char)
 	 */
-	@Override
 	public void setAmenaza(int x, int y, char amenaza) throws MapaException{
 		try{
 			if(!this.inicializado)
@@ -37,7 +36,6 @@ public class MapaMarte implements Mapa {
 	/* (non-Javadoc)
 	 * @see com.seven4n.prueba.mapa.Mapa#getAmenaza(int, int)
 	 */
-	@Override
 	public char getAmenaza(int x, int y) throws MapaException{
 		try{
 			if(!this.inicializado)
@@ -53,7 +51,6 @@ public class MapaMarte implements Mapa {
 	/* (non-Javadoc)
 	 * @see com.seven4n.prueba.mapa.Mapa#coordenadaValida(int, int)
 	 */
-	@Override
 	public boolean coordenadaValida(int x, int y) throws MapaException{
 		
 		try{
