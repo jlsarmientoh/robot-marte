@@ -21,8 +21,7 @@ public class EntradaAmenazasTest {
 	
 	@Before
 	public void setUp(){
-		Mapa mapa = new MapaMarte(5,5);
-		this.entradaDatos = new EntradaAmenazas(mapa);
+		this.entradaDatos = new EntradaAmenazas(5,5);
 	}
 
 	@Test

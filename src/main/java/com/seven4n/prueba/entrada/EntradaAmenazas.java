@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import com.seven4n.prueba.excepciones.EntradaException;
 import com.seven4n.prueba.excepciones.MapaException;
 import com.seven4n.prueba.mapa.Mapa;
+import com.seven4n.prueba.mapa.MapaMarte;
 
 /**
  * @author Jorge
@@ -29,9 +30,9 @@ public class EntradaAmenazas extends BaseEntrada implements EntradaDatos<Mapa> {
 	/**
 	 * @param mapa
 	 */
-	public EntradaAmenazas(Mapa mapa) {
+	public EntradaAmenazas(int x, int y) {
 		super();
-		this.mapa = mapa;
+		this.mapa = new MapaMarte(y, x);
 	}
 
 	/* (non-Javadoc)
@@ -46,7 +47,7 @@ public class EntradaAmenazas extends BaseEntrada implements EntradaDatos<Mapa> {
 		
 		try {
 			scanner = new Scanner(archivoEntrada);
-			scanner.useDelimiter("System.delimiter");
+			scanner.useDelimiter("line.separator");
 			
 			while(scanner.hasNext()){
 				String linea = scanner.nextLine();
@@ -65,6 +66,9 @@ public class EntradaAmenazas extends BaseEntrada implements EntradaDatos<Mapa> {
 			throw new EntradaException("No se pudo cargar el archivo de amenazas: " + e.getMessage());
 		} catch (MapaException e) {
 			throw new EntradaException("Datos de entrada inválidos: " + e.getMessage());
+		} finally{
+			if(scanner != null)
+				scanner.close();
 		}
 		
 		return mapa;
