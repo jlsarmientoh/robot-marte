@@ -44,7 +44,7 @@ public class EntradaMovimientos extends BaseEntrada implements EntradaDatos<List
 		Scanner scanner = null;
 		
 		if(!archivoEntrada.exists())
-			throw new EntradaException("Archivo de amenazas no existe: " + file);
+			throw new EntradaException("Archivo de movimientos no existe: " + file);
 		
 		try {
 			scanner = new Scanner(archivoEntrada);

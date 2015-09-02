@@ -1,0 +1,10 @@
+spring:
+  profiles:
+    active: dev
+  main:
+    show-banner: false
+---
+spring:
+  profiles: default
+amenazas: src/main/resources/amenazas.txt
+movimientos: src/main/resources/movimientos.txt
